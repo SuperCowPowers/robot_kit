@@ -42,8 +42,26 @@ def test():
     """Test for the NeoPixelStrip class"""
     import time
     led_strip = NeoPixelStrip()
-    led_strip.on(255, 0, 0)  # R, G, B
-    time.sleep(1)
+    for r, g, b in zip(range(128, 0, -1), range(0, 128), range(0, 128)):
+        led_strip.on(r, g, b)
+        time.sleep(0.01)
+
+    # Yellow
+    led_strip.on(128, 128, 0)
+    time.sleep(1.0)
+
+    # Orange
+    led_strip.on(255, 128, 0)
+    time.sleep(1.0)
+
+    # Red
+    led_strip.on(255, 0, 0)
+    time.sleep(1.0)
+
+    # Green
+    led_strip.on(0, 255, 0)
+    time.sleep(1.0)
+
     led_strip.off()
     led_strip.cleanup()
 
