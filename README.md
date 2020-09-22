@@ -9,7 +9,7 @@ $ sudo pip3 install robot_kit
 ```
 
 ### Examples
-See the Examples directory for all the code, here are some short examples of how to use the module.
+See the Examples directory for all the code, here is the code listing for **examples/robot_start.py**
 
 ```
 from robot_kit.leds import NeoPixelStrip
@@ -34,4 +34,9 @@ if __name__ == '__main__':
     wheels.all(0.25)
     time.sleep(1.0)
     wheels.stop()
+```
+
+**Note:** Yon order to run this code you'll need to be sudo as the LED library requires it.
+```
+$ sudo python3 robot_start.py
 ```
