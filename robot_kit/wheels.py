@@ -3,7 +3,7 @@ from robot_kit.PCA9685 import PCA9685
 import time
 
 
-class Wheels():
+class Wheels:
     """A lightweight wrapper around the four servo motors driven by a PCA9685 chip
        Usage:
             wheels = Wheels()
@@ -12,8 +12,6 @@ class Wheels():
             wheels.all(1.0)  # Move all wheels forward at full speed
             wheels.all(-0.5)  # Move all wheels backward at half speed
             wheels.stop()  # Stop all wheels
-            wheels.turn_left(0.5)  # Turn left at half speed
-            wheels.turn_right(0.5)  # Turn right at slow speed
 
             # You can also do individual wheels for testing purposes
             wheels.left_front(1.0)  # Turn the left front wheel full speed forward
@@ -47,20 +45,6 @@ class Wheels():
         """Stop ALL of the wheels"""
         for wheel in ['left_front', 'left_rear', 'right_front', 'right_rear']:
             self._set_wheel_speed(wheel, 0.0)
-
-    def turn_left(self, speed):
-        """Turn left using alternate directions on wheels"""
-        for wheel in ['left_front', 'left_rear']:
-            self._set_wheel_speed(wheel, -speed)
-        for wheel in ['right_front', 'right_rear']:
-            self._set_wheel_speed(wheel, speed)
-
-    def turn_right(self, speed):
-        """Turn left using alternate directions on wheels"""
-        for wheel in ['right_front', 'right_rear']:
-            self._set_wheel_speed(wheel, -speed)
-        for wheel in ['left_front', 'left_rear']:
-            self._set_wheel_speed(wheel, speed)
 
     # Note: From this point on are testing methods, in normal operation
     #       you probably shouldn't turn/operation/stop an individual wheel
@@ -158,15 +142,6 @@ def test():
     time.sleep(1.0)
     wheels.stop()
     time.sleep(1.0)
-
-    wheels.turn_left(0.25)
-    time.sleep(1.0)
-    wheels.stop()
-    time.sleep(1.0)
-
-    wheels.turn_right(0.25)
-    time.sleep(1.0)
-    wheels.stop()
 
     wheels.cleanup()
 
