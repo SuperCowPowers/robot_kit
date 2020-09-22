@@ -1,5 +1,5 @@
 """A lightweight wrapper around the four servo motors driven by a PCA9685 chip"""
-from PCA9685 import PCA9685
+from robot_kit.PCA9685 import PCA9685
 import time
 
 

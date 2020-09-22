@@ -34,11 +34,13 @@ setup(
     include_package_data=True,
     data_files=get_files('data') + get_files('examples'),
     install_requires=[
+        'smbus',
+        'adafruit-circuitpython-neopixel',
     ],
     extras_require={
     },
     license='Apache',
-    keywords='Zeek, Bro, Python, PCAP',
+    keywords='Robotics, Python',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
