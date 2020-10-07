@@ -14,6 +14,7 @@ See the Examples directory for all the code, here is the code listing for **exam
 ```
 from robot_kit.leds import NeoPixelStrip
 from robot_kit.wheels import Wheels
+from robot_kit.ultrasonic import Ultrasonic
 import time
 
 if __name__ == '__main__':
@@ -34,6 +35,13 @@ if __name__ == '__main__':
     wheels.all(0.25)
     time.sleep(1.0)
     wheels.stop()
+   
+    # Get the distance from the Ultrasonic sensor
+    dis_sensor = Ultrasonic()
+    for i in range(50):
+        print(dis_sensor.get_distance())
+        time.sleep(0.5)
+    
 ```
 
 **Note:** Yon order to run this code you'll need to be sudo as the LED library requires it.
