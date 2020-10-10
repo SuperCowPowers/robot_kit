@@ -9,6 +9,8 @@ class Ultrasonic:
         GPIO.setwarnings(False)
         self.trigger_pin = 27
         self.echo_pin = 22
+        self.time_distance_factor = 0.000058  # Time to Centimeters conversion
+        self.timeout_distance = 1000  # Distance to return when echo timeout occurs
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.trigger_pin, GPIO.OUT)
         GPIO.setup(self.echo_pin, GPIO.IN)
@@ -17,26 +19,36 @@ class Ultrasonic:
         distance_readings = []
         for i in range(3):
             self._send_trigger_pulse()
-            self._wait_for_echo(True, 10000)
-            start = time.time()
-            self._wait_for_echo(False, 10000)
-            finish = time.time()
-            pulse_len = finish-start
-            distance_readings.append(pulse_len/0.000058)
+            pulse_len = self._wait_for_echo()
+            # Check for timeout
+            if pulse_len == -1:
+                return self.timeout_distance
+            else:  # Convert pulse time to distance
+                distance_readings.append(pulse_len/self.time_distance_factor)
         avg = sum(distance_readings) / len(distance_readings)
         return avg
 
     def _send_trigger_pulse(self):
         """Internal Method"""
-        GPIO.output(self.trigger_pin, True)
+        GPIO.output(self.trigger_pin, 1)
         time.sleep(0.00015)
-        GPIO.output(self.trigger_pin, False)
+        GPIO.output(self.trigger_pin, 0)
 
-    def _wait_for_echo(self, value, timeout):
+    def _wait_for_echo(self, max_samples=5000):
         """Internal Method"""
-        count = timeout
-        while GPIO.input(self.echo_pin) != value and count > 0:
-            count = count-1
+
+        # First we wait for the ON/1 reading (which may timeout)
+        for i in range(max_samples):
+            if GPIO.input(self.echo_pin) == 1:
+                # Now we time how long it takes to get the OFF/0 reading
+                start = time.time()
+                while GPIO.input(self.echo_pin) != 0:
+                    time.sleep(0.00001)  # 10 microseconds
+                total_time = time.time() - start
+                return total_time
+
+        # Return the Timeout value
+        return -1
 
 
 def test():
