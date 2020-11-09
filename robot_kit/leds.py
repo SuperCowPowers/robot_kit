@@ -1,6 +1,7 @@
 """A lightweight wrapper around the NeoPixel LED Strip"""
 import board
 import neopixel
+import time
 
 
 class NeoPixelStrip():
@@ -38,9 +39,26 @@ class NeoPixelStrip():
         self.strip.deinit()
 
 
+class CommandBlink:
+
+    def __init__(self, function):
+        self.led_strip = NeoPixelStrip()
+        self.function = function
+
+    def __call__(self, *args, **kwargs):
+        # Turn LEDs blue
+        self.led_strip.on(0, 255, 0)
+
+        # Call the function
+        self.function(*args, **kwargs)
+
+        # Turn LEDs Off
+        time.sleep(0.05)  # Quick sleep in case function didn't take long
+        self.led_strip.off()
+
+
 def test():
     """Test for the NeoPixelStrip class"""
-    import time
     led_strip = NeoPixelStrip()
     for r, g, b in zip(range(128, 0, -1), range(0, 128), range(0, 128)):
         led_strip.on(r, g, b)
