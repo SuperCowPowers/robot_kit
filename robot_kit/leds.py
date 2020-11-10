@@ -12,12 +12,22 @@ class NeoPixelStrip():
             time.sleep(1)
             led_strip.off()
     """
-    def __init__(self, led_pin=board.D18, num_leds=8, brightness=1.0):
+    # Singleton Object Pattern
+    __instance = None
+
+    def __new__(cls, led_pin=board.D18, num_leds=8, brightness=1.0):
+        if NeoPixelStrip.__instance is None:
+            NeoPixelStrip.__instance = object.__new__(cls)
+            NeoPixelStrip.__instance.__class_init__(led_pin, num_leds, brightness)
+        return NeoPixelStrip.__instance
+
+    @classmethod
+    def __class_init__(cls, led_pin=board.D18, num_leds=8, brightness=1.0):
         """NeoPixelStrip Initialization"""
-        self.led_pin = led_pin
-        self.num_leds = num_leds
-        self.brightness = brightness
-        self.strip = neopixel.NeoPixel(self.led_pin, self.num_leds, brightness=self.brightness)
+        cls.led_pin = led_pin
+        cls.num_leds = num_leds
+        cls.brightness = brightness
+        cls.strip = neopixel.NeoPixel(cls.led_pin, cls.num_leds, brightness=cls.brightness)
 
     def on(self, red, green, blue):
         """Turn all the LEDs to one color
@@ -47,19 +57,29 @@ class CommandBlink:
 
     def __call__(self, *args, **kwargs):
         # Turn LEDs blue
-        self.led_strip.on(0, 255, 0)
+        self.led_strip.on(0, 0, 255)
 
         # Call the function
         self.function(*args, **kwargs)
 
         # Turn LEDs Off
-        time.sleep(0.05)  # Quick sleep in case function didn't take long
+        time.sleep(0.1)  # Quick sleep in case function didn't take long
         self.led_strip.off()
 
 
 def test():
     """Test for the NeoPixelStrip class"""
+
+    # Create the class
     led_strip = NeoPixelStrip()
+
+    # Test the CommandBlink Decorator
+    @CommandBlink
+    def foo(a):
+        print(a)
+    foo(0.5)
+    time.sleep(1.0)
+
     for r, g, b in zip(range(128, 0, -1), range(0, 128), range(0, 128)):
         led_strip.on(r, g, b)
         time.sleep(0.01)
@@ -80,6 +100,7 @@ def test():
     led_strip.on(0, 255, 0)
     time.sleep(1.0)
 
+    # Turn off led strip
     led_strip.off()
     led_strip.cleanup()
 
