@@ -17,7 +17,7 @@ class Ultrasonic:
 
     def get_distance(self):
         distance_readings = []
-        for i in range(3):
+        for i in range(5):
             self._send_trigger_pulse()
             pulse_len = self._wait_for_echo()
             # Check for timeout
@@ -25,8 +25,8 @@ class Ultrasonic:
                 return self.timeout_distance
             else:  # Convert pulse time to distance
                 distance_readings.append(pulse_len/self.time_distance_factor)
-        avg = sum(distance_readings) / len(distance_readings)
-        return avg
+        min_distance = min(distance_readings)
+        return min_distance
 
     def _send_trigger_pulse(self):
         """Internal Method"""

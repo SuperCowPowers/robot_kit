@@ -29,6 +29,13 @@ class NeoPixelStrip():
         cls.brightness = brightness
         cls.strip = neopixel.NeoPixel(cls.led_pin, cls.num_leds, brightness=cls.brightness)
 
+    def __init__(self):
+        self.current_rgb = (0, 0, 0)
+
+    def get_rgb(self):
+        """Return the current color of the LEDs"""
+        return self.current_rgb[0], self.current_rgb[1], self.current_rgb[2]
+
     def on(self, red, green, blue):
         """Turn all the LEDs to one color
         Args:
@@ -37,6 +44,7 @@ class NeoPixelStrip():
                blue: blue value (0-255)
         """
         self.strip.fill((red, green, blue))
+        self.current_rgb = (red, green, blue)
 
     def off(self):
         """Turn all the LEDs off"""
